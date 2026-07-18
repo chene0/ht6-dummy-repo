@@ -1,0 +1,15 @@
+services:
+  api:
+    build:
+      context: .
+    environment:
+      PORT: 3000
+      LOG_LEVEL: info
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:3000/health"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
