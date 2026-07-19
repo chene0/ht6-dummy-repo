@@ -9,8 +9,12 @@ const createIncident = z.object({
 });
 
 export function registerIncidentRoutes(app: FastifyInstance, store: IncidentStore, service: IncidentService): void {
-  app.get("/api/incidents", async () => ({ incidents: store.list() }));
+  app.get("/api/incidents", async () => {
+    app.log.info({ route: "listIncidents" }, "handler invoked");
+    return { incidents: store.list() };
+  });
   app.post("/api/incidents", async (request, reply) => {
+    app.log.info({ route: "createIncident" }, "handler invoked");
     const input = createIncident.parse(request.body);
     const incident = service.create(input.title, input.severity);
     return reply.code(201).send(incident);
