@@ -7,11 +7,13 @@ const transition = z.object({ status: z.enum(["investigating", "mitigating", "re
 
 export function registerIncidentDetailRoutes(app: FastifyInstance, service: IncidentService): void {
   app.get("/api/incidents/:id", async request => {
+    app.log.info({ route: "getIncidentDetail" }, "handler invoked");
     const { id } = parameters.parse(request.params);
     return service.requireIncident(id);
   });
 
   app.patch("/api/incidents/:id/status", async request => {
+    app.log.info({ route: "transitionIncidentStatus" }, "handler invoked");
     const { id } = parameters.parse(request.params);
     const { status } = transition.parse(request.body);
     return service.transition(id, status);
